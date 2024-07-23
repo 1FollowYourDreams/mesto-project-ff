@@ -4,8 +4,6 @@ export function openModal(popupElement) {
   popupElement.classList.add('popup_is-opened');
   document.addEventListener('keydown', closeModalEsc);
   popupElement.addEventListener('click', closeModalOverlay);
-  const popupClose = popupElement.querySelector('.popup__close');
-  popupClose.addEventListener('click', () => closeModal(popupElement));
 }
 
 //Функция закрытие модального окна
@@ -13,8 +11,6 @@ export function closeModal(popupElement) {
   popupElement.classList.remove('popup_is-opened');
   document.removeEventListener('keydown', closeModalEsc);
   popupElement.removeEventListener('click', closeModalOverlay);
-  const popupClose = popupElement.querySelector('.popup__close');
-  popupClose.removeEventListener('click', () => closeModal(popupElement));
 }
 
 //Закрытие попапа кликом на оверлей
