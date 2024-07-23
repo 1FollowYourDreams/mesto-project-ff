@@ -9,6 +9,7 @@ const addButton = document.querySelector('.profile__add-button');
 
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const popupClose = document.querySelectorAll('.popup__close');
 
 const typeEdit = document.querySelector('.popup_type_edit');
 const typeNewCard = document.querySelector('.popup_type_new-card');
@@ -82,3 +83,12 @@ editButton.addEventListener('click', function() {
     newCard.reset();
   }
   newCard.addEventListener("submit", addCard);
+  
+  popupClose.forEach(button => {
+    button.addEventListener('click', () => {
+      const popupOpened = document.querySelector('.popup_is-opened');
+      if (popupOpened) {
+        closeModal(popupOpened);
+      }
+    });
+  });
