@@ -18,7 +18,7 @@ export function createCard(data, delCard, likeCard, clickImage) {
   });
 
   const cardLikeButton = cardData.querySelector('.card__like-button');
-  cardLikeButton.addEventListener('click', function () {
+  cardLikeButton.addEventListener('click', () => {
     likeCard(cardLikeButton);
   });
 
@@ -37,8 +37,8 @@ export function delCard(cardDelButton) {
 
 // @todo: Функция лайка карточки
 
-export function likeCard(evt) {
-  if(evt.target.classList.contains('card__like-button')) {
-  evt.target.classList.toggle('card__like-button_is-active')
-}
+export function likeCard(cardLikeButton ) {
+ 
+  cardLikeButton.classList.toggle('card__like-button_is-active')
+
 }
