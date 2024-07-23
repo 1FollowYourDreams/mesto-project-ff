@@ -11,7 +11,7 @@ export function createCard(data, delCard, likeCard, clickImage) {
   const cardImage = cardData.querySelector('.card__image');
   cardData.querySelector('.card__title').textContent = data.name;
   cardImage.src = data.link;
-  cardImage.alt = 'Пейзажи и здания';
+  cardImage.alt = data.name;
 
   cardDelButton.addEventListener('click', function () {
     delCard(cardDelButton);
