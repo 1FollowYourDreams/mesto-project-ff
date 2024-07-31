@@ -2,6 +2,21 @@ import './pages/index.css';
 import { initialCards } from './components/cards.js';
 import { placesList, createCard, delCard, likeCard } from './components/card.js';
 import { openModal, closeModal } from './components/modals.js';
+import { enableValidation, clearValidation  } from './components/validation.js';
+import { loadingProfileInfo } from "./components/api.js";
+
+
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
 
 
 const editButton = document.querySelector('.profile__edit-button');
@@ -44,10 +59,12 @@ editButton.addEventListener('click', function() {
   function setValues () {
     nameInput.value = profileTitle.textContent;
     jobInput.value = profileDescription.textContent;
+    
   }
   
   addButton.addEventListener('click', function() {
     openModal(typeNewCard);
+    
   });
 
   function clickImage(data) {
@@ -92,3 +109,20 @@ editButton.addEventListener('click', function() {
       }
     });
   });
+
+
+  
+  const promise = new Promise((resolve) => {
+    resolve(loadingProfileInfo())
+  })
+  
+  promise
+    .then((res) => {
+      profileTitle.textContent = res.name;
+      profileDescription.textContent = res.about;
+    })
+
+
+
+enableValidation(validationConfig);
+clearValidation(validationConfig);
