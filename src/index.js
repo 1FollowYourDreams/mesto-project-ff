@@ -49,10 +49,11 @@ const validationConfig = {
   errorClass: 'popup__error_visible'
 }; 
 
+let myId;
 
 Promise.all([getInfoUser(), getInitialCards()])
 .then(([userData, cardsAdd]) => {
-  const myId = userData._id;
+  myId = userData._id;
   profileImageAvatar.style.backgroundImage = `url(\\${userData.avatar})`;
   profileTitle.textContent = userData.name;
   profileDescription.textContent = userData.about;
@@ -63,6 +64,13 @@ Promise.all([getInfoUser(), getInitialCards()])
   });
 })
 .catch((err) => console.log(err));
+
+function clickImage(imageLink, cardName) {
+  popupImage.src = imageLink;
+  popupImage.alt = cardName;
+  popupCaption.textContent = cardName;
+  openModal(typeImage);
+  }
 
 
 function addCardForm(evt) {
@@ -81,7 +89,7 @@ function addCardForm(evt) {
   }
   
 
-function ChangeAvatarForm(evt) {
+function changeAvatarForm(evt) {
 evt.preventDefault();
 const saveButton = popupButtonAvatar.textContent;
 popupButtonAvatar.textContent = 'Сохранение...';
@@ -103,7 +111,7 @@ editInfoUser(nameInput.value, jobInput.value)
   .then((userData) => {
     profileTitle.textContent = userData.name;
     profileDescription.textContent = userData.about;
-    closeModal(popupForm);
+    closeModal(typeEdit);
   })
   .catch((err) => console.log(err))
   .finally(() => popupButton.textContent = saveButton);
@@ -118,14 +126,8 @@ closeButton.addEventListener('click', function() {
 popup.addEventListener('click', closeModalOverlay);
 });
 
-function clickImage(imageLink, cardName) {
-  popupImage.src = imageLink;
-  popupImage.alt = cardName;
-  popupCaption.textContent = cardName;
-  openModal(typeImageContainer);
-  }
 
-  popupFormAvatar.addEventListener('submit', ChangeAvatarForm);
+  popupFormAvatar.addEventListener('submit', changeAvatarForm);
   popupForm.addEventListener('submit', editFormProfile);
   popupFormCard.addEventListener('submit', addCardForm);
 

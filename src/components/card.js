@@ -6,12 +6,13 @@ export const createCard = (myId, data, delCard, addRemoveCard, clickImage) => {
   const cardData = cardTemplate.querySelector('.card').cloneNode(true); 
   const cardDelButton = cardData.querySelector('.card__delete-button');
   const cardImage = cardData.querySelector('.card__image');
+  const cardTitle = cardData.querySelector('.card__title');
   const cardLikeButton = cardData.querySelector('.card__like-button');
-  cardData.querySelector('.card__title').textContent = data.name;
+  const likeScore = cardData.querySelector('.card__like-score');
+  
   cardImage.src = data.link;
   cardImage.alt = data.name;
-  
-  const likeScore = cardData.querySelector('.card__like-score');
+  cardTitle.textContent = data.name;
   likeScore.textContent = data.likes.lenght;
 
   if (data.owner._id === myId) {
@@ -39,6 +40,14 @@ export const createCard = (myId, data, delCard, addRemoveCard, clickImage) => {
   return cardData;
 }
 
+// @todo: Функция удаления карточки
+export const delCard = (data, cardData) => {
+  delCardServer(data._id)
+    .then(() => cardData.remove())
+    .catch((err) => console.log(err));
+}
+
+
 // @todo: Функция лайка карточки
 export const addRemoveCard = (data, cardData) => {
 
@@ -65,9 +74,3 @@ export const addRemoveCard = (data, cardData) => {
   }
 }
 
-// @todo: Функция удаления карточки
-export const delCard = (data, cardData) => {
-  delCardServer(data._id)
-    .then(() => cardData.remove())
-    .catch((err) => console.log(err));
-}
