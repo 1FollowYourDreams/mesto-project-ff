@@ -1,8 +1,18 @@
 import './pages/index.css';
-import { createCard, delCard, addRemoveCard } from './components/card.js';
+import { createCard, delCard, onLike } from './components/card.js';
 import { openModal, closeModal, closeModalOverlay } from './components/modals.js';
 import { getInfoUser, getInitialCards, editInfoUser, addCardServer, changeAvatar } from './components/api.js';
 import { enableValidation, clearValidation  } from "./components/validation.js";
+let myId;
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}; 
 
 
 const container = document.querySelector('.places');
@@ -40,16 +50,7 @@ const popupCaption = typeImage.querySelector('.popup__caption');
 
 const popupButtonCard = popupFormCard.querySelector('.popup__button');
 
-const validationConfig = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-}; 
 
-let myId;
 
 Promise.all([getInfoUser(), getInitialCards()])
 .then(([userData, cardsAdd]) => {
@@ -59,7 +60,7 @@ Promise.all([getInfoUser(), getInitialCards()])
   profileDescription.textContent = userData.about;
   cardsAdd.forEach((card) => {
     placesList.append(
-      createCard(myId, card, delCard, addRemoveCard, clickImage)
+      createCard(myId, card, delCard, onLike, clickImage)
     );
   });
 })
@@ -73,34 +74,19 @@ function clickImage(imageLink, cardName) {
   }
 
 
-function addCardForm(evt) {
-  evt.preventDefault();
-  const saveButton = popupButtonCard.textContent;
-  popupButtonCard.textContent = 'Сохранение...';
-  addCardServer(cardName.value, typeUrl.value)
-    .then((data) => {
-      const newCard = createCard(myId, data, delCard, addRemoveCard, clickImage);
-      placesList.prepend(newCard);
-      closeModal(typeNewCard);
-      popupFormCard.reset();
-    })
-    .catch((err) => console.log(err))
-    .finally(() => popupButtonCard.textContent = saveButton);
-  }
-  
-
-function changeAvatarForm(evt) {
-evt.preventDefault();
-const saveButton = popupButtonAvatar.textContent;
-popupButtonAvatar.textContent = 'Сохранение...';
-changeAvatar (typeUrlAvatar.value)
-  .then((avatarData) => {
-    profileImageAvatar.style.backgroundImage = `url(${avatarData.avatar})`;
-    closeModal(popupTypeAvatar);
-  })
-  .catch((err) => console.log(err))
-  .finally(() => popupButtonAvatar.textContent = saveButton);
-}
+  function changeAvatarForm(evt) {
+    evt.preventDefault();
+    const saveButton = popupButtonAvatar.textContent;
+    popupButtonAvatar.textContent = 'Сохранение...';
+    changeAvatar (typeUrlAvatar.value)
+      .then((avatarData) => {
+        profileImageAvatar.style.backgroundImage = `url(${avatarData.avatar})`;
+        closeModal(popupTypeAvatar);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => popupButtonAvatar.textContent = saveButton);
+    }
+    
 
 
 function editFormProfile(evt) {
@@ -118,6 +104,24 @@ editInfoUser(nameInput.value, jobInput.value)
 }
 
 
+function addCardForm(evt) {
+  evt.preventDefault();
+  const saveButton = popupButtonCard.textContent;
+  popupButtonCard.textContent = 'Сохранение...';
+  addCardServer(cardName.value, typeUrl.value)
+    .then((data) => {
+      const newCard = createCard(myId, data, delCard, onLike, clickImage);
+      placesList.prepend(newCard);
+      closeModal(typeNewCard);
+      popupFormCard.reset();
+    })
+    .catch((err) => console.log(err))
+    .finally(() => popupButtonCard.textContent = saveButton);
+  }
+  
+
+
+
 popups.forEach(function(popup) {
 const closeButton = popup.querySelector('.popup__close');
 closeButton.addEventListener('click', function() {
@@ -127,17 +131,12 @@ popup.addEventListener('click', closeModalOverlay);
 });
 
 
-  popupFormAvatar.addEventListener('submit', changeAvatarForm);
-  popupForm.addEventListener('submit', editFormProfile);
-  popupFormCard.addEventListener('submit', addCardForm);
-
+profileImageAvatar.addEventListener('click', function() {
+  popupFormAvatar.reset();
+  clearValidation(popupFormAvatar, validationConfig);
+  openModal(popupTypeAvatar);
+  });
   
-addButton.addEventListener('click', function() {
-    popupFormCard.reset();
-    clearValidation(popupFormCard, validationConfig);
-    openModal(typeNewCard);
-    });
-    
 
 editButton.addEventListener('click', function() {
   nameInput.value = profileTitle.textContent;
@@ -147,11 +146,18 @@ editButton.addEventListener('click', function() {
   });
 
 
-profileImageAvatar.addEventListener('click', function() {
-popupFormAvatar.reset();
-clearValidation(popupFormAvatar, validationConfig);
-openModal(popupTypeAvatar);
-});
+  
+addButton.addEventListener('click', function() {
+    popupFormCard.reset();
+    clearValidation(popupFormCard, validationConfig);
+    openModal(typeNewCard);
+    });
+    
+
+
+popupFormAvatar.addEventListener('submit', changeAvatarForm);
+  popupForm.addEventListener('submit', editFormProfile);
+  popupFormCard.addEventListener('submit', addCardForm);
 
 
 enableValidation(validationConfig);
