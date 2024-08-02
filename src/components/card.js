@@ -4,9 +4,9 @@ import { delCardServer, addLike, removeLike } from "./api.js";
 export const createCard = (myId, data, delCard, addRemoveCard, clickImage) => {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardData = cardTemplate.querySelector('.card').cloneNode(true); 
-  const cardDelButton = cardData.querySelector('.card__delete-button');
   const cardImage = cardData.querySelector('.card__image');
   const cardTitle = cardData.querySelector('.card__title');
+  const cardDelButton = cardData.querySelector('.card__delete-button');
   const cardLikeButton = cardData.querySelector('.card__like-button');
   const likeScore = cardData.querySelector('.card__like-score');
   
